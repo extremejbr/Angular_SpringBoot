@@ -1,0 +1,81 @@
+<!-- <table border='1'>
+  <tr>
+    <th>Etiqueta</th>
+    <th>Descrição</th>
+    <th>Aquisição</th>
+  </tr>
+  <tr *ngFor="let item of itens">
+    <td>{{ item.etiqueta}}</td>
+    <td>{{ item.descricao}}</td>
+    <td>{{ item.dataAquisicao | date:'dd/MM/yyyy'}}</td>
+  </tr>
+</table> -->
+<div class='ui-g-10 txt-center'>
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <!-- <h1>Gestão de Patrimônio</h1> -->
+    </div>
+
+    <form #frm="ngForm" (ngSubmit)="adicionar(frm)">
+      <div class='ui-g-6 ui-fluid'>
+        <label>Etiqueta</label>
+        <p-inputMask name="etiqueta" mask="aa9999" [(ngModel)]="editarItem.etiqueta" [required]="true"></p-inputMask>
+      </div>
+      <div class='ui-g-6 ui-fluid'>
+        <label>Data da aquisição</label>
+        <p-calendar name="dataAquisicao" dateFormat="dd/mm/yy" [(ngModel)]="dataAquisicaoItemeditar" [required]="true"></p-calendar>
+      </div>
+      <div class='ui-g-12 ui-fluid'>
+        <label>Descrição</label>
+        <input pInputText name="descricao" [(ngModel)]="editarItem.descricao" [required]="true">
+      </div>
+
+      <div *ngIf="buttonAdicionar" class="ui-g-12">
+        <button pButton type="submit" label="Adicionar" [disabled]="frm.invalid"></button>
+        <button pButton class="ui-button-warning" type="button" (click)="cancelar(frm)" label="Cancelar"></button>
+      </div>
+      <div *ngIf="buttonAtualizar" class="ui-g-12">
+        <button pButton type="button" (click)="atualizar(frm, idItemEditar)" label="Atualizar" [disabled]="frm.invalid"></button>
+        <button pButton class="ui-button-warning" type="button" (click)="cancelar(frm)" label="Cancelar"></button>
+      </div>
+
+      <!-- {{idItemEditar}} -->
+
+    </form>
+
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <p-dataTable [value]="itens" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" sortField='etiqueta'>
+          <p-column field="etiqueta" header="Etiqueta" [sortable]="true"></p-column>
+          <p-column field="descricao" header="Descrição" [sortable]="true" [editable]="true"></p-column>
+          <p-column field="dataAquisicao" header="Aquisição" [sortable]="true">
+            <ng-template pTemplate="body" let-item="rowData">
+              {{ item.dataAquisicao | date:'dd/MM/yyyy'}}
+            </ng-template>
+          </p-column>
+          <p-column header="Ações">
+            <ng-template pTemplate="body" let-item="rowData">
+              <button pButton class="ui-button-warning" (click)="editar(item.id)" icon="fa-edit"></button>
+              <button pButton class="ui-button-danger" (click)="excluir(item.id)" icon="fa-trash"></button>
+            </ng-template>
+          </p-column>
+        </p-dataTable>
+      </div>
+    </div>
+
+    <!-- Mensagens de notificação do sistema! -->
+    <div class='ui-g-12'> 
+        <p-growl [value]="msgs"></p-growl>
+        <p-messages [(value)]="msgsBar"></p-messages>
+    </div>
+
+    <!-- Modal de confirmação de exclusão de item -->
+    <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" #cd>
+        <p-footer>
+          <button type="button" pButton class="ui-button-danger" icon="fa-close" label="Não" (click)="cd.reject()"></button>
+          <button type="button" pButton class="ui-button-success" icon="fa-check" label="Sim" (click)="cd.accept()"></button>
+        </p-footer>
+      </p-confirmDialog>
+
+  </div>
